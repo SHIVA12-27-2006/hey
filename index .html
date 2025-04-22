@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Stylish Login Page</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+      background: #000;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 400px;
+      padding: 30px;
+      background: #fff;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(0, 191, 255, 0.3);
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: scale(0.95); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    h2 {
+      text-align: center;
+      color: #000;
+      margin-bottom: 30px;
+      font-size: 28px;
+    }
+
+    .input-box {
+      position: relative;
+      margin-bottom: 30px;
+    }
+
+    .input-box input {
+      width: 100%;
+      padding: 12px 40px 12px 45px;
+      border: 2px solid #000;
+      border-radius: 25px;
+      outline: none;
+      font-size: 16px;
+      background: transparent;
+      transition: all 0.3s ease;
+    }
+
+    .input-box input:focus {
+      border-color: #00bfff;
+      box-shadow: 0 0 10px rgba(0, 191, 255, 0.5);
+    }
+
+    .input-box i {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #000;
+      font-size: 18px;
+      transition: color 0.3s ease;
+    }
+
+    .input-box input:focus + i {
+      color: #00bfff;
+    }
+
+    .input-box .border-animation {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border: 2px solid #00bfff;
+      border-radius: 25px;
+      opacity: 0;
+      transform: scale(0.9);
+      transition: all 0.3s ease;
+      pointer-events: none;
+    }
+
+    .input-box input:focus ~ .border-animation {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .checkbox {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+      color: #000;
+    }
+
+    .checkbox input {
+      margin-right: 10px;
+      accent-color: #00bfff;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px;
+      background: #000;
+      color: #fff;
+      border: none;
+      border-radius: 25px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+      background: #00bfff;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 191, 255, 0.4);
+    }
+
+    .error {
+      color: #00bfff;
+      font-size: 14px;
+      text-align: center;
+      margin-top: 10px;
+      display: none;
+    }
+
+    #loadingSpinner {
+      display: none;
+      text-align: center;
+      margin-top: 15px;
+      color: #00bfff;
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: #000;
+    }
+
+    .toggle-password:hover {
+      color: #00bfff;
+    }
+
+    @media screen and (max-width: 500px) {
+      h2 {
+        font-size: 24px;
+      }
+
+      .btn {
+        font-size: 14px;
+      }
+
+      .input-box input {
+        font-size: 14px;
+        padding: 10px 40px 10px 45px;
+      }
+
+      .input-box i {
+        font-size: 16px;
+      }
+
+      .toggle-password {
+        font-size: 16px;
+      }
+
+      .checkbox label {
+        font-size: 13px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Login</h2>
+    <form id="loginForm" onsubmit="return validateForm(event)">
+      <div class="input-box">
+        <input type="text" id="name" placeholder="Name" required />
+        <i class="fas fa-user"></i>
+        <span class="border-animation"></span>
+      </div>
+      <div class="input-box">
+        <input type="email" id="email" placeholder="Email" required />
+        <i class="fas fa-envelope"></i>
+        <span class="border-animation"></span>
+      </div>
+      <div class="input-box">
+        <input type="password" id="password" placeholder="Password (max 8 chars)" maxlength="8" required />
+        <i class="fas fa-lock"></i>
+        <i class="fas fa-eye toggle-password" onclick="togglePassword()"></i>
+        <span class="border-animation"></span>
+      </div>
+      <div class="checkbox">
+        <input type="checkbox" id="ageCheck" required />
+        <label for="ageCheck">I am 16+ years old</label>
+      </div>
+      <button type="submit" class="btn">Login</button>
+      <div class="error" id="errorMsg"></div>
+      <div id="loadingSpinner">Loading...</div>
+    </form>
+  </div>
+
+  <script>
+    function validateForm(event) {
+      event.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const ageCheck = document.getElementById('ageCheck').checked;
+      const errorMsg = document.getElementById('errorMsg');
+      const loadingSpinner = document.getElementById('loadingSpinner');
+
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const namePattern = /^[a-zA-Z\s]+$/;
+
+      if (!namePattern.test(name)) {
+        showError('Name must contain only letters and spaces');
+        return false;
+      } else if (!emailPattern.test(email)) {
+        showError('Please enter a valid email');
+        return false;
+      } else if (!ageCheck) {
+        showError('You must be 16+ to proceed');
+        return false;
+      } else {
+        errorMsg.style.display = 'none';
+        loadingSpinner.style.display = 'block';
+        sessionStorage.setItem('username', name);
+        setTimeout(() => {
+          loadingSpinner.style.display = 'none';
+          alert('You have successfully logged in!');
+          window.location.href = 'front page.html';
+        }, 1500);
+        return true;
+      }
+    }
+
+    function showError(message) {
+      const errorMsg = document.getElementById('errorMsg');
+      errorMsg.textContent = message;
+      errorMsg.style.display = 'block';
+      errorMsg.style.animation = 'shake 0.5s';
+      
+      const styleSheet = document.styleSheets[0];
+      if (![...styleSheet.cssRules].some(rule => rule.name === 'shake')) {
+        styleSheet.insertRule(`
+          @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+          }
+        `, styleSheet.cssRules.length);
+      }
+    }
+
+    function togglePassword() {
+      const pwd = document.getElementById('password');
+      pwd.type = pwd.type === 'password' ? 'text' : 'password';
+    }
+  </script>
+</body>
+</html>

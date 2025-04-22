@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GLOBESCAPE</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <style>
+      /* Global & Dark Mode */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        background: #fff;
+        color: #000;
+      }
+      .dark-mode {
+        background: #121212;
+        color: #fff;
+      }
+
+      /* Navbar */
+      .navbar {
+        display: inline-flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #222;
+        padding: 15px 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+      .navbar .logo {
+        display: flex;
+        align-items: center;
+        color: #fff;
+        font-size: 28px;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+      }
+      .navbar .logo img {
+        width: 80px;
+        height: 80px;
+        margin-right: 10px;
+        border-radius: 50%;
+      }
+      .navbar .nav-links {
+        display: flex;
+        gap: 15px;
+      }
+      .navbar .nav-links a {
+        color: #fff;
+        text-decoration: none;
+        font-size: 16px;
+        padding: 10px 15px;
+        border-radius: 8px;
+        transition: 0.3s;
+      }
+      .navbar .nav-links a:hover {
+        background: #575757;
+        box-shadow: 0 0 10px #fff;
+      }
+
+      /* Theme Toggle */
+      .theme-container {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .theme-toggle {
+        position: relative;
+        width: 50px;
+        height: 25px;
+        background: #ddd;
+        border-radius: 20px;
+        cursor: pointer;
+      }
+      .theme-toggle .slider {
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        background: #fff;
+        border-radius: 50%;
+        top: 50%;
+        left: 3px;
+        transform: translateY(-50%);
+        transition: 0.3s;
+      }
+      .dark-mode .theme-toggle {
+        background: #555;
+      }
+      .dark-mode .slider {
+        left: 25px;
+        background: yellow;
+      }
+
+      /* Header & Sections */
+      header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 5;
+        background: #333;
+        display: flex;
+        justify-content: center;
+      }
+      header a,
+      footer a {
+        margin-left: 40px;
+        text-decoration: none;
+        color: #fff;
+        padding: 20px 0;
+        display: inline-block;
+      }
+      header a:hover,
+      footer a:hover {
+        color: #ddd;
+      }
+
+      /* Homepage */
+      .homepage {
+        height: 100vh;
+        position: relative;
+        background: url("home-bg.jpg") center 65%/cover no-repeat;
+      }
+      .homepage::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.2);
+      }
+      .homepage .content {
+        position: relative;
+        z-index: 3;
+        height: 85%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+      .homepage h1 {
+        font-size: 60px;
+        color: #fff;
+        margin-bottom: 10px;
+        text-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      }
+      .homepage p {
+        font-size: 20px;
+        color: #fff;
+        text-align: center;
+        margin-bottom: 50px;
+        text-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      }
+      .homepage a {
+        text-transform: uppercase;
+        font-size: 18px;
+        padding: 10px 30px;
+        background: #fff;
+        color: #000;
+        border: 2px solid #fff;
+        border-radius: 5px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        text-decoration: none;
+        transition: 0.4s;
+      }
+      .homepage a:hover {
+        background: rgba(255, 255, 255, 0.3);
+        color: #fff;
+      }
+
+      /* Services, Portfolio, About, Contact (existing styles remain same) */
+      /* ... your existing section styles ... */
+
+      /* Chat Container */
+      #chat-container {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 400px;
+        height: 500px;
+        background: linear-gradient(135deg, #d7e1e0, #e69090);
+        border-radius: 15px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        display: none;
+        flex-direction: column;
+        overflow: hidden;
+        border: 3px solid #333;
+        z-index: 1000;
+      }
+      #chat-header {
+        background: #222;
+        color: white;
+        padding: 12px;
+        font-size: 18px;
+        font-weight: bold;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-radius: 15px 15px 0 0;
+      }
+      #chat-header button {
+        background: transparent;
+        border: none;
+        color: white;
+        font-size: 20px;
+        cursor: pointer;
+      }
+      #chat-box {
+        flex: 1;
+        padding: 15px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .chat-message {
+        max-width: 80%;
+        padding: 10px;
+        border-radius: 10px;
+        font-size: 14px;
+        line-height: 1.4;
+      }
+      .user-message {
+        align-self: flex-end;
+        background: #4caf50;
+        color: white;
+        border-top-right-radius: 0;
+      }
+      .bot-message {
+        align-self: flex-start;
+        background: #f1f1f1;
+        color: black;
+        border-top-left-radius: 0;
+      }
+      #chat-input {
+        display: flex;
+        padding: 10px;
+        border-top: 2px solid #ddd;
+        background: white;
+        border-radius: 0 0 15px 15px;
+      }
+      #chat-input input {
+        flex: 1;
+        padding: 12px;
+        border: none;
+        outline: none;
+        font-size: 16px;
+        border-radius: 8px;
+        background: #f9f9f9;
+      }
+      #chat-input button {
+        background: #1b1b1b;
+        color: white;
+        border: none;
+        padding: 12px 15px;
+        font-size: 16px;
+        cursor: pointer;
+        margin-left: 5px;
+        border-radius: 8px;
+        transition: background 0.3s ease;
+      }
+      #chat-input button:hover {
+        background: #000000;
+      }
+
+      /* Floating Chat Button */
+      #chat-btn {
+        position: fixed;
+        bottom: 10px;
+        right: 7px;
+        background: #222;
+        color: white;
+        border: none;
+        padding: 15px 10px;
+        font-size: 18px;
+        cursor: pointer;
+        border-radius: 70px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        transition: transform 0.2s ease-in-out;
+        z-index: 999;
+      }
+      #chat-btn:hover {
+        transform: scale(1.1);
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav class="navbar">
+        <div class="logo">
+          <img src="logo.jpg" alt="Travel Explorer Logo">
+          Travel Explorer
+        </div>
+        <div class="nav-links">
+          <a href="#home">Home</a>
+          <a href="seasons.html">Seasons</a>
+          <a href="#portfolio">Suggestions</a>
+          <a href="booking page.html">Booking</a>
+          <a href="suggestion.html">Contact</a>
+        </div>
+        <div class="theme-container">
+          <span class="icon-sun">☀️</span>
+          <div class="theme-toggle" onclick="toggleTheme()">
+            <div class="slider"></div>
+          </div>
+          <span class="icon-moon">🌙</span>
+        </div>
+      </nav>
+    </header>
+
+    <!-- All your existing sections here -->
+    <section class="homepage" id="home">
+      <!-- ... existing homepage content ... -->
+    </section>
+
+    <!-- Chat Window -->
+    <div id="chat-container">
+      <div id="chat-header">
+        <span>Chat With Happy 🌍</span>
+        <button onclick="toggleChat()">✖</button>
+      </div>
+      <div id="chat-box"></div>
+      <div id="chat-input">
+        <input type="text" id="user-input" placeholder="Type your message..." onkeypress="handleKeyPress(event)">
+        <button onclick="sendMessage()"> → </button>
+      </div>
+    </div>
+
+    <!-- Floating Chat Button -->
+    <button id="chat-btn" onclick="toggleChat()">💬 Chat With Happpy</button>
+
+    <script>
+      // Theme Toggle
+      function toggleTheme() {
+        document.body.classList.toggle("dark-mode");
+      }
+
+      // Chat Functions
+      function toggleChat() {
+        const chatContainer = document.getElementById("chat-container");
+        chatContainer.style.display = chatContainer.style.display === "flex" ? "none" : "flex";
+      }
+
+      async function sendMessage() {
+        let inputField = document.getElementById("user-input");
+        let userText = inputField.value.trim();
+        if (userText === "") return;
+
+        appendMessage("You", userText, "user-message");
+        inputField.value = "";
+
+        let typingMessage = appendMessage("GLOBESCAPE AI", "Typing...", "bot-message");
+
+        try {
+          let response = await fetchWithTimeout(
+            "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyAmmRggeuRNYM0oWcP4E48zcmxuLe9qBhc",
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                contents: [{ parts: [{ text: userText }] }],
+                generationConfig: { maxOutputTokens: 100 }
+              })
+            }
+          );
+
+          let data = await response.json();
+          let botReply = data?.candidates?.[0]?.content?.parts?.[0]?.text || "I'm not sure about that.";
+          typingMessage.innerHTML = `<strong>GLOBESCAPE AI:</strong> ${botReply}`;
+        } catch (error) {
+          typingMessage.innerHTML = `<strong>GLOBESCAPE AI:</strong> Oops! Something went wrong.`;
+          console.error("Error:", error);
+        }
+      }
+
+      function appendMessage(sender, message, className) {
+        let chatBox = document.getElementById("chat-box");
+        let msgElement = document.createElement("div");
+        msgElement.classList.add("chat-message", className);
+        msgElement.innerHTML = `<strong>${sender}:</strong> ${message}`;
+        chatBox.appendChild(msgElement);
+        chatBox.scrollTop = chatBox.scrollHeight;
+        return msgElement;
+      }
+
+      function handleKeyPress(event) {
+        if (event.key === "Enter") {
+          sendMessage();
+        }
+      }
+
+      async function fetchWithTimeout(url, options, timeout = 5000) {
+        const controller = new AbortController();
+        const id = setTimeout(() => controller.abort(), timeout);
+        options.signal = controller.signal;
+
+        try {
+          let response = await fetch(url, options);
+          clearTimeout(id);
+          return response;
+        } catch (error) {
+          clearTimeout(id);
+          throw error;
+        }
+      }
+    </script>
+  </body>
+</html>
